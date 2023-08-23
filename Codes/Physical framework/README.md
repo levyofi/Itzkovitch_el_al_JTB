@@ -19,3 +19,8 @@ The code need three parameters to run properly:
 
 Physical model
 -
+To run the physical model script, julia environment need to be installed. 
+To run the model on your own data, one change need to be done: 
+Args argument need to be set as following:
+ARGS = [input, output, soil type (default = 0)] 
+The script generates the ground temperature predictions, and saves it in the output folder.
