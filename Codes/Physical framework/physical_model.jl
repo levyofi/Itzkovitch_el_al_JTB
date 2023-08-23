@@ -146,11 +146,11 @@ end
 get_map_data(name) = fix_raster_NA(get_raster_data(name)) ;
 
 # ARGS = [input, output, soiltype (default = 0)]
-ARGS1 = ["", 
+ARGS = ["", 
     "output_data/", 
     8] ;
 
-args = map(x -> string(x), ARGS1) ; 
+args = map(x -> string(x), ARGS) ; 
 working_directory = String(args[1]) ;
 meteoro = CSV.read(working_directory * "input_data/input_meteorological_data.csv", DataFrame) ;
 
@@ -179,7 +179,7 @@ SHADE = get_map_data("shade") ;
 SKYVIEW = get_map_data("skyview") ;
 TGI = get_map_data("tgi") ;
 
-soiltype = parse(Int, (args[3])) ; # NTBA need to be adapted by the gui or command line interference
+soiltype = parse(Int, (args[3])) ; 
 if soiltype == 0
     BEXP = Statistics.mean(EXPB) ;
     SMCMAX = Statistics.mean(MAXSMC) ;
@@ -1024,9 +1024,6 @@ end
 ########################################################################
 
 output_folder = args[2] ;
-## header for the raster # !!!
-
-## parallelization #!!!
 
 surf_temp_all = zeros(Float16, (meteoro.height[1], meteoro.width[1])) ;
 
