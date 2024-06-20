@@ -1,5 +1,5 @@
 To use the deterministic physical model, two steps are needed. 
-The first is to run R scripts to create input data, and the second is to run julia script to get physical predictions.
+The first is to run R scripts to create input data (with or without meteorological data, depend on the user), and the second is to run julia script to get physical predictions.
 
 input data
 -
