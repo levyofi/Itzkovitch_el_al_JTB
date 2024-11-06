@@ -55,12 +55,12 @@ ax41.hlines(0, 0, 1, color = 'grey', linestyle = 'dashed')
 ax51 = ax[1,1] #plt.subplot2grid((7, 14), (4, 5), colspan=4, rowspan=3)
 sns.boxplot(df_map.melt('Shade', value_vars = ['M1', 'M2'], var_name = 'Model'), x = 'Shade', y = 'value',
               hue = 'Model', ax = ax51, legend = True, palette={"M1": c1, "M2": c2})
-ax51.set_ylabel('')
 ax51.set_xlabel('Shade', size = 16)
 ax51.hlines(0, 0, 1, color = 'grey', linestyle = 'dashed')
 sns.move_legend(ax51, loc='lower center', ncol=2, bbox_to_anchor=(0.5, -.35), labels=[name1, name2])
 sns.swarmplot(df_map.melt('Shade', value_vars = ['M1', 'M2'], var_name = 'Model'), x = 'Shade', y = 'value',
               hue = 'Model', ax = ax51, legend = False, palette={"M1": c1, "M2": c2}, dodge = True, s = 1)
+ax51.set_ylabel('')
 
 # Real Solar
 ax61 = ax[1,2] #plt.subplot2grid((7, 14), (4, 10), colspan=4, rowspan=3)
