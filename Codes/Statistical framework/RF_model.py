@@ -1,9 +1,3 @@
-'''
-
-'''
-
-
-
 #%% Imports
 import glob
 import pandas as pd
@@ -44,7 +38,7 @@ trainRF - model training.
 test - for each map in the test set, calculate the coeerction map and save it in npy format.
 '''
 
-class M2():
+class RF_Correction_Model():
 
     def __init__(self, path, name, map_size = 1_024):
         '''
@@ -61,7 +55,7 @@ class M2():
         files_dict = {'IR':[], 'TGI':[], 'height':[], 'shade':[], 'real_solar':[], 'skyview':[]}
         temp_list = glob.glob(f'{y_path}/*.tif')
         temp_list.sort()
-        files_dict['M1'] = temp_list
+        files_dict['M1'] = temp_list # before ML
         flights = [f.split('/')[-1][:-6] for f in temp_list]
         files_dict['Flight'] = flights
         for name in np.unique(flights):
@@ -174,7 +168,7 @@ class M2():
 # train the model
 train_maps = "Zeelim_29.5.19_0830,Zeelim_29.5.19_1650,Zeelim_29.5.19_1730,Zeelim_30.5.19_0600,Zeelim_30.5.19_0630,Zeelim_18.9.19_0900,Zeelim_18.9.19_1200,Zeelim_18.9.19_1300,Zeelim_18.9.19_1400,Zeelim_18.9.19_1500,Zeelim_18.9.19_1720,Zeelim_7.11.19_1030,Zeelim_7.11.19_1100,Zeelim_7.11.19_1310,Zeelim_7.11.19_1550,Zeelim_7.11.19_1640,Zeelim_30.1.20_0810,Zeelim_30.1.20_0920,Zeelim_30.1.20_0950,Zeelim_30.1.20_1050,Zeelim_30.1.20_1200,Zeelim_30.1.20_1300,Zeelim_30.1.20_1350,Zeelim_30.1.20_1449,Zeelim_30.1.20_1523"
 train_set = train_maps.split(',')
-model2 = M2(main_path, 'M2')
+model2 = RF_Correction_Model(main_path, 'M2')
 model2.split_data(1_000, train_set)
 model2.trainRF(plot = True)
 
@@ -187,7 +181,7 @@ except:
 model2.test(fold_path)
 
 # save the model
-with open(f'{fold_path}/m2.pkl', 'wb') as handle:
+with open(f'{fold_path}/after_ml.pkl', 'wb') as handle:
     pickle.dump(model2, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 #%% Create summary DF for model performances
@@ -202,44 +196,44 @@ d = {'Map':[],
 for file in files:
     name = file.split('/')[-1][:-13]
     try:
-      t1 = glob.glob(f'{main_path}/physical_model/{name}*')[0]
-      m2 = glob.glob(f'{fold_path}/{name}_Model_RF.npy')[0]
-      fir = glob.glob(f'{main_path}/IR_fixed/{name}*')[0]
+      beforeML = glob.glob(f'{main_path}/physical_model/{name}*')[0]
+      afterML = glob.glob(f'{fold_path}/{name}_Model_RF.npy')[0]
+      ir = glob.glob(f'{main_path}/IR_fixed/{name}*')[0]
       tgi = glob.glob(f'{main_path}/cropped_maps/{name[:-2]}/TGI_{name[-1]}.tif')[0]
     except:
       print(file)
       continue
 
-    t1_map = gdal.Open(t1).ReadAsArray() # tf.imread(t1)
-    m2_map = np.load(m2)
-    fir_map = np.load(fir) + 273.16
+    beforeML_map = gdal.Open(beforeML).ReadAsArray() # tf.imread(t1)
+    afterML_map = np.load(afterML)
+    ir_map = np.load(ir) + 273.16
     tgi_map = gdal.Open(tgi).ReadAsArray() # tf.imread(tgi)
 
-    t1_map[tgi_map > 0.04] = np.nan
-    m2_map[tgi_map > 0.04] = np.nan
-    fir_map[tgi_map > 0.04] = np.nan
+    beforeML_map[tgi_map > 0.04] = np.nan
+    afterML_map[tgi_map > 0.04] = np.nan
+    ir_map[tgi_map > 0.04] = np.nan
 
-    if np.nanmean(t1_map - fir_map) > 1_000:
+    if np.nanmean(beforeML_map - ir_map) > 1_000:
         continue
 
     d['Map'].append(name)
 
-    d['M1_ME'].append(np.nanmean(t1_map - fir_map))
-    d['M1_MAE'].append(np.nanmean(abs(t1_map - fir_map)))
-    d['M1_STD'].append(np.nanstd(t1_map - fir_map))
-    d['M1_MAD'].append(np.nanstd(abs(t1_map - fir_map)))
+    d['beforeML_ME'].append(np.nanmean(beforeML_map - ir_map))
+    d['beforeML_MAE'].append(np.nanmean(abs(beforeML_map - ir_map)))
+    d['beforeML_STD'].append(np.nanstd(beforeML_map - ir_map))
+    d['beforeML_MAD'].append(np.nanstd(abs(beforeML_map - ir_map)))
 
-    d['M2_ME'].append(np.nanmean((t1_map - m2_map - fir_map)))
-    d['M2_MAE'].append(np.nanmean(abs(t1_map - m2_map - fir_map)))
-    d['M2_STD'].append(np.nanstd((t1_map - m2_map - fir_map)))
-    d['M2_MAD'].append(np.nanstd(abs(t1_map - m2_map - fir_map)))
+    d['beforeML_ME'].append(np.nanmean((beforeML_map - afterML_map - ir_map)))
+    d['beforeML_MAE'].append(np.nanmean(abs(beforeML_map - afterML_map - ir_map)))
+    d['beforeML_STD'].append(np.nanstd((beforeML_map - afterML_map - ir_map)))
+    d['beforeML_MAD'].append(np.nanstd(abs(beforeML_map - afterML_map - ir_map)))
 
 df = pd.DataFrame(d)
 
 # save df
-df.to_csv(f'{fold_path}/physical_results_{fold_name}.csv')
+df.to_csv(f'{fold_path}/correction_model_results_{fold_name}.csv')
 
 #%% Summarize results
 
 df['Flight'] = df["Map"].apply(lambda x: pd.Series(str(x)[:-2]))
-df[['Flight', 'M1_ME', 'M2_ME', 'M1_MAE', 'M2_MAE']].groupby('Flight').mean()
+df.groupby('Flight').mean()
