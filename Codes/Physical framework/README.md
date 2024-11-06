@@ -23,5 +23,5 @@ Physical model
 To run the physical model script, julia environment need to be installed. 
 To run the model on your own data, one change need to be done - on "ARGS" variable.   
 ARGS variable need to be set as following:  
-ARGS = [input, output, soil type (default = 0)].   
+ARGS = [input, output, soil type (default = 0)]. In our case, due to the fact that all maps where taken in the same place, we fit soil type to 8 (desert).  
 The script generates the ground temperature predictions, and saves it in the output folder.
