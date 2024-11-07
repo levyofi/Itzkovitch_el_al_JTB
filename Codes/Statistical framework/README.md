@@ -8,3 +8,5 @@ The following steps are required and processed:
 2. the model trained on 80% of the data. In our case, there is no leakage of information within days, meaning all flights from  the same day are in one set (train or test).
 3. the model predict results on the other 20%.
 4. data is saved, meaning one prediction map for each file.
+
+The base model (class) is random forest, which can be switched to DNN if wanted.
