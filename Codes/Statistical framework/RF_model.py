@@ -23,8 +23,8 @@ physical_model folder >> physical prediction files.
 cropped_maps folder >> contain subfolders with flight's input data
 '''
 
-fold_name = input('Enter Folder Name (to save data in):\n')
-main_path = input('Enter Folder Path for Maps:\n')
+fold_name = 'Example data' #input('Enter Folder Name (to save data in):\n')
+main_path = '..' #input('Enter Folder Path for Maps:\n')
 fold_path = f'{main_path}/{fold_name}'
 
 #%% Model Class
