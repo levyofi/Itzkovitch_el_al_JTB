@@ -1,9 +1,8 @@
+# Example data folder
 In this folder, you can find the following:
-- Input data folder
-- Output data folder:
-  - Physical prediction
-  - Statistical correction
-- Validation data (IR map for real ground-temperature; RGB for visualization)
-All of the above were taken from flight from 12.04.2021 at 11:18AM.
+- `Input data folder:` maps and table used to create model before and after ML predictions.
+- `Output data folder:` before and after ML models prediction.
+- `Tables:` tables and dataframes generated to analyze the models. 
+- `StatisticalCorrectionModel.zip:` the full machone learning model. However, in order to import the model, one first had to run the script of the model (see Code section).
 
-Also, the full statistical model is attached. However, in order to import the model, one first had to run the script of the model (see Code section).
+All example maps  were taken from flight from 31.05.2021 at 15:16PM.
