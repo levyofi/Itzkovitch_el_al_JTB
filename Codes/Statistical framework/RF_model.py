@@ -45,8 +45,8 @@ class RF_Correction_Model():
         Create model class.
         At initiation - create dataframe that contain all paths to input maps
         '''
-        X_path = path + '/cropped_maps/'
-        y_path = path + '/physical_model'
+        X_path = path + '/input_data/'
+        y_path = path + '/input_data'
 
         self.name = name
         self.N = map_size
@@ -161,14 +161,14 @@ class RF_Correction_Model():
                                      'Shade':shade, 'RealSolar':real_solar, 'Skyview':skyview})
 
                 m2_map = self.RFModel.predict(dataRF).reshape((self.N, self.N))
-                np.save(f'{path}/{name}_Model_RF.npy', m2_map)
+                np.save(f'{path}/Output data/{name}_Model_RF.npy', m2_map)
 
 #%% Run the model
 
 # train the model
 train_maps = "Zeelim_29.5.19_0830,Zeelim_29.5.19_1650,Zeelim_29.5.19_1730,Zeelim_30.5.19_0600,Zeelim_30.5.19_0630,Zeelim_18.9.19_0900,Zeelim_18.9.19_1200,Zeelim_18.9.19_1300,Zeelim_18.9.19_1400,Zeelim_18.9.19_1500,Zeelim_18.9.19_1720,Zeelim_7.11.19_1030,Zeelim_7.11.19_1100,Zeelim_7.11.19_1310,Zeelim_7.11.19_1550,Zeelim_7.11.19_1640,Zeelim_30.1.20_0810,Zeelim_30.1.20_0920,Zeelim_30.1.20_0950,Zeelim_30.1.20_1050,Zeelim_30.1.20_1200,Zeelim_30.1.20_1300,Zeelim_30.1.20_1350,Zeelim_30.1.20_1449,Zeelim_30.1.20_1523"
 train_set = train_maps.split(',')
-model2 = RF_Correction_Model(main_path, 'M2')
+model2 = RF_Correction_Model(main_path, 'afterML')
 model2.split_data(1_000, train_set)
 model2.trainRF(plot = True)
 
@@ -196,7 +196,7 @@ d = {'Map':[],
 for file in files:
     name = file.split('/')[-1][:-13]
     try:
-      beforeML = glob.glob(f'{main_path}/physical_model/{name}*')[0]
+      beforeML = glob.glob(f'{main_path}/{name}*')[0]
       afterML = glob.glob(f'{fold_path}/{name}_Model_RF.npy')[0]
       ir = glob.glob(f'{main_path}/IR_fixed/{name}*')[0]
       tgi = glob.glob(f'{main_path}/cropped_maps/{name[:-2]}/TGI_{name[-1]}.tif')[0]
@@ -231,7 +231,7 @@ for file in files:
 df = pd.DataFrame(d)
 
 # save df
-df.to_csv(f'{fold_path}/correction_model_results_{fold_name}.csv')
+df.to_csv(f'{fold_path}/Tables/correction_model_results_{fold_name}.csv')
 
 #%% Summarize results
 
