@@ -12,3 +12,14 @@ The machine  learning model.
 ## Step 3 - Analysis and figures
 `Figures folder.`
 - A script for each figure in the main text and supplementary (in both R and python).
+
+## Environment setups
+Three environments were set for this codes:
+**`R:`**
+No ibraries should be downloaded.
+
+R version should be 2.9.1 or lower, in order to use rgdal package.
+**`Julia:`**
+Many packages are downloaded during the script. However, all of them are downloaded automatically at the begining of the script.
+**`Python:`**
+A pre-downloaded packages were used in python.
