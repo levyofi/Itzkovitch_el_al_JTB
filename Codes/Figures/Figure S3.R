@@ -20,7 +20,7 @@ test_maps <- c("Zeelim_12.04.21_1118", "Zeelim_23.9.19_0610", "Zeelim_23.9.19_07
 dct <- list(TGI = numeric(), Height = numeric(), Shade = numeric(), RealSolar = numeric(), Skyview = numeric(), Set = character())
 
 # Directory where the TIFF files are located (adjust the path accordingly)
-flight_files <- list.files('/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps/', full.names = TRUE)
+flight_files <- list.files('/../Example data/Input data', full.names = TRUE)
 
 #keep only folders included in this paper
 base_names <- unlist(strsplit(basename(flight_files), "//"))
