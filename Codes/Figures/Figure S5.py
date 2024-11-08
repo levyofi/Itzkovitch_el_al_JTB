@@ -6,7 +6,7 @@ import numpy as np
 mod1 = 1 # model 1 == before ML
 mod2 = 2 # model 2 == after ML
 
-df_map = pd.read_csv(f'/content/gdrive/MyDrive/MicroDrone/SamplePixels_{mod1}{mod2}.csv')
+df_map = pd.read_csv(f'../Example data/Tables/SamplePixels_12.csv')
 
 fig = plt.figure(figsize = (18,12))
 fig, ax = plt.subplots(2,3, figsize = (18,12))
