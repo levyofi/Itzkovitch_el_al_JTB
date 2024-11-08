@@ -12,7 +12,7 @@ library(rgrass7)
 library(lubridate)
 library(suncalc)
 
-working_path <- '/Users/user/Desktop/ofir_lab/MicroDrone/' # Change it to wanted directory - NTBC
+working_path <- '../' # Change it to wanted directory - NTBC
 
 date = "18/09/2019" # args[1] # d/m/y format for the relevant data - NTBC
 time = "13:00" # args[2] # hh:mm format for the relevant data - NTBC
