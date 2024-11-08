@@ -5,7 +5,8 @@ The first is to run R scripts to create input data (with or without meteorologic
 ## Step 1 - convert drone images to maps and create input data (python, R and Pix4DMapper)
 1. The first step is to create the model input data. In order to do so, one needs to convert the raw drone maps into input maps (tif format), as well as creating a meteorological dataframe.
 
-We used Pix4DMapper software as the first image proccessing stage.  
+We used Pix4DMapper software as the first image proccessing stage.
+
 2. `create_input_maps.R:` Next, we convert the maps from Pix4DMapper software (DSM, DTM, RGB) into input maps (TGI, height, real solar, skyview and shade) using the attached script.  
 
 The code need three parameters to run properly: 
@@ -22,7 +23,7 @@ The code need three parameters to run properly:
   - time of flight (format DD.MM.YY_HHMM)
   - timezone
 
-4.1 `create_meteorological_df_NoStation.R:` this script does the same as the above script ("withStation"), and used for cases where online data are accessed instead of mobile station.
+  4.1 `create_meteorological_df_NoStation.R:` this script does the same as the above script ("withStation"), and used for cases where online data are accessed instead of mobile station.
 
 ##  Step 2 - Physical model (in julia)
 To run the physical model script, julia environment need to be installed.
