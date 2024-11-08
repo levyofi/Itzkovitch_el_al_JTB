@@ -3,7 +3,7 @@ library(data.table)
 library(tidyr)
 library(dplyr)
 
-data = fread("/home/ofir/Downloads/SamplePixels_all.csv", select = c("beforeML", "afterML", "afterML+mPE"))
+data = fread("../Tables/SamplePixels_all.csv", select = c("beforeML", "afterML", "afterML+mPE"))
 
 
 # Transform data from wide to long format using melt from data.table
