@@ -3,7 +3,7 @@ library(reshape2)
 library(ggpubr)
 
 # Load the data from an Excel file
-df <- readxl::read_excel('comp_df.xlsx')
+df <- readxl::read_excel('../Example data/Tables/ML_NN_comparison.xlsx')
 df = df[,c("NNM1_ME", "Phy_ME", "RF_ME", "NNM2_ME", "NNM1_MAE", "Phy_MAE", "RF_MAE", "NNM2_MAE")]
 # Parameters for plotting
 params <- c('ME', 'MAE')
