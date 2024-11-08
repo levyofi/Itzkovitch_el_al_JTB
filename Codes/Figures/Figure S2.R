@@ -45,7 +45,7 @@ param_labels <- list(
 dct <- data.frame(DataSet = character(), Value = numeric(), Type = character(), stringsAsFactors = FALSE)
 
 # Process the CSV files
-files <- list.files("/home/ofir/Dropbox/eclipse workspace/lab/Alon/met_data/", pattern = "Zeelim.*\\_new.csv", full.names = TRUE)
+files <- list.files("../Example data/Input data/met_data/", pattern = "Zeelim.*\\_new.csv", full.names = TRUE)
 
 for (file in files) {
   name <- strsplit(basename(file), "_input")[[1]][1]
