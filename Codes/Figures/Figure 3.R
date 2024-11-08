@@ -4,7 +4,7 @@ library(tidyr)
 library(dplyr)
 library(gridExtra)
 # Example data
-data <- read.csv("../Tables/RF_CorrectionModel_summary.csv", header = TRUE)
+data <- read.csv("../Example data/Tables/RF_CorrectionModel_summary.csv", header = TRUE)
 
 # Create separate dataframes for ME, MAE, and MSE
 df_ME <- data %>%
