@@ -1,2 +1,14 @@
-# Itzkovitch_el_al_AI_assisted_microclimate_modeling
-Microclimates play a vital role in shaping the behavior and ecological dynamics of organisms. To these days, remote sensing coupled with ground-temperature physically-modeling has emerged as a common approach to detect and characterize microclimates. However, physical models are subject to certain limitations that can hinder their accuracy. In the current study, we offer a novel framework that combines statistical modeling with deterministic physical predictions to achieve more precise ground-temperature modeling. By integrating statistical methods into our modeling approach, we successfully mitigated the prediction errors that present in a physical deterministic model. We identified several critical parameters that significantly influenced the accuracy of deterministic predictions. These findings contribute to a deeper understanding of the factors that impact microclimate detection and enable more refined modeling studies in the future.
+# Using machine learning to correct biases in microclimate predictions1
+
+_Alon Itzkovitch, Idan Sulami, Ronny Doron Efroni, Shimon Shahar, Michael Kearney, and
+Ofir Levy_
+
+### Please contact Ofir Levy (levyofir@tauex.tau.ac.il) about the code or data
+
+## Abstract:
+
+Microclimates are essential for understanding how organisms interact with their environments, influencing behavior, physiology, and species distributions. Traditional approaches for modeling ground temperatures in microhabitats rely on physical models informed by remote sensing data; however, these models often exhibit significant biases due to unaccounted environmental factors. In this study, we developed a framework that combines drone-based microclimate mapping with machine learning to correct prediction errors in a physical ground-temperature model. Our machine learning model effectively reduced biases across diverse environmental conditions, identifying key factors—such as solar radiation, vegetation cover, and skyview—that contribute to model inaccuracies. By integrating these corrections, we achieved more accurate ground-temperature predictions, enhancing our capacity to map microclimates at fine spatial scales. This hybrid modeling approach offers a powerful tool for ecologists, conservationists, and land managers seeking to better understand microclimatic effects on biodiversity and ecosystem resilience in a changing climate.
+
+## Reposetory:
+- Data can be found in `Example data` Folder.
+- All codes can be found in `Codes` Folder.
