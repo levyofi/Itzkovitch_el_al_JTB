@@ -3,7 +3,7 @@ library(reshape2)
 library(ggpubr)
 
 # Load the data
-df <- read.csv('era5_gldas_comparison.csv')
+df <- read.csv('../Example data/Tables/online_met_dbs_comparison.csv')
 
 # Reshape the data for ggplot2
 df_long <- melt(df, measure.vars = c("Station_ME", "ERA5_ME", "Station_MAE", "ERA5_MAE"))
