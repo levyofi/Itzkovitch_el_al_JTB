@@ -66,7 +66,7 @@ get_value_lat_lon = function(sp, varname, nc_name){
 }
 
 ALBEDO = get_value_lat_lon(sp1deg, "Albedo_inst", nc_name)
-SWR =  read.table("flight_met_station.csv", sep=",", header=T, stringsAsFactors = F)[66,]$radiation #get_value_lat_lon(sp1deg, "SWdown_f_tavg", nc_name) if no meteorological station data provided
+SWR =  read.table("Example data/Input data/flight_met_station.csv", sep=",", header=T, stringsAsFactors = F)[66,]$radiation #get_value_lat_lon(sp1deg, "SWdown_f_tavg", nc_name) if no meteorological station data provided
 
 loc <- initGRASS("/Users/user/Desktop/ofir_lab/MicroDrone/GRASS78", home=working_path, gisDbase="GRASS_R", override=TRUE ,mapset="PERMANENT")#
 use_sp()
