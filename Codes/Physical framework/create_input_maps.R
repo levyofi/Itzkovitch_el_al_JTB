@@ -14,8 +14,8 @@ library(suncalc)
 
 working_path <- '../' # Change it to wanted directory - NTBC
 
-date = "18/09/2019" # args[1] # d/m/y format for the relevant data - NTBC
-time = "13:00" # args[2] # hh:mm format for the relevant data - NTBC
+date = "31/05/2021" # args[1] # d/m/y format for the relevant data - NTBC
+time = "11:40" # args[2] # hh:mm format for the relevant data - NTBC
 
 date = dmy(date)
 julian_day= yday(date)
@@ -66,7 +66,7 @@ get_value_lat_lon = function(sp, varname, nc_name){
 }
 
 ALBEDO = get_value_lat_lon(sp1deg, "Albedo_inst", nc_name)
-SWR =  read.table("Example data/Input data/flight_met_station.csv", sep=",", header=T, stringsAsFactors = F)[66,]$radiation #get_value_lat_lon(sp1deg, "SWdown_f_tavg", nc_name) if no meteorological station data provided
+SWR =  read.table("Example data/Input data/flight_met_station.csv", sep=",", header=T, stringsAsFactors = F)[43,]$radiation #get_value_lat_lon(sp1deg, "SWdown_f_tavg", nc_name) if no meteorological station data provided
 
 loc <- initGRASS("/Users/user/Desktop/ofir_lab/MicroDrone/GRASS78", home=working_path, gisDbase="GRASS_R", override=TRUE ,mapset="PERMANENT")#
 use_sp()

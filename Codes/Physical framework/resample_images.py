@@ -1,60 +1,62 @@
 import rasterio as rs
-from rasterio.enums import Resampling
-import numpy as np
+from rasterio.windows import Window
 import os
+from random_subimages import RandomSubimages
+from resample_images import ResampleImages
 
-
-class ResampleImages:
-    # Class for resampling images of a given flight
-   
-    def __init__(self, paths, resample_type):
-        # Initializes the paths of the images, the resample type (up or down), resample state and scale factor
-        self.paths = paths
-        self.resample_type = resample_type
-        self.resample_state = self.resample_images_state()
-        self.scale_factor = self.get_scale_factor()
-   
-    def resample_images_state(self):
-        # Returns a boolean dictionary with accordance to the resample type:
-        # 'downsample' returns True for RGB and DSM; 'upsample' returns True for thermal
-        resample_state = np.array([True, True, False])
-        if self.resample_type == 'upsample':
-            resample_state = ~ resample_state
-        return dict(zip(self.paths, resample_state))
-       
-    def get_scale_factor(self):
-        rgb_shape = np.array(rs.open(self.paths[0]).shape)
-        ir_shape = np.array(rs.open(self.paths[-1]).shape)
-        rgb_ir_ratio = ir_shape / rgb_shape
-        if self.resample_type == 'upsample':
-            return 1 / rgb_ir_ratio
-        return rgb_ir_ratio
-   
-    def resample_images(self, resamples_dir):
-        # Resamples the images of self.paths according to the resample type and returns a list of updated paths
-        updated_paths = []
-        for path in self.paths:
-            if not self.resample_state[path]:
-                updated_paths.append(path)
-                continue
-            image_filename = '/'.join(path.split('/')[4:])[:-4]
-            resampled_path = os.path.join(resamples_dir, f'{image_filename}_{self.resample_type}d.tif')
-            if os.path.isfile(resampled_path):
-                updated_paths.append(resampled_path)
-                continue
+              
+class RandomSubimagesAllMaps:
+    # Class for creating random subimages for all the maps in the given directory
+    
+    def __init__(self, flights_info, output_path):
+        # Initializes the input and output paths
+        self.flights = flights_info
+        self.output_path = output_path
+        
+    def save_subimages(self, paths, flight, coordinates, size):
+        # Saves a list of subimages in a given flight directory in self.output_path
+        if not os.path.exists(os.path.join(self.output_path, flight)):
+            os.makedirs(os.path.join(self.output_path, flight), exist_ok=True)
+        for path in paths:
+            image_filename = os.path.basename(path)[:-4]
             with rs.open(path) as image:
-                resampled = image.read(out_shape=
-                                       (image.count, int(image.height*self.scale_factor[0]),
-                                        int(image.width*self.scale_factor[1])),
-                                       resampling=Resampling.lanczos, masked=True)
-                transform = image.transform*image.transform.scale(image.width/resampled.shape[-1],
-                                                                  image.height/resampled.shape[-2])
-                profile = image.profile
-                profile.update({'height': int(image.height*self.scale_factor[0]),
-                                'width': int(image.width*self.scale_factor[1]),
-                                'transform': transform})
-                updated_paths.append(resampled_path)
-                os.makedirs(os.path.dirname(resampled_path), exist_ok=True)
-                with rs.open(resampled_path, 'w', **profile) as res_image:
-                    res_image.write(resampled)
-        return updated_paths
+                for index, coordinate in enumerate(coordinates):
+                    window = Window(*coordinate[::-1], size, size)
+                    transform = image.window_transform(window)
+                    profile = image.profile
+                    profile.update({'height': size, 'width': size, 'transform': transform})
+                    subimage_path = os.path.join(self.output_path, flight, f'{image_filename}_{index + 1}.tif')
+                    with rs.open(subimage_path, 'w', **profile) as subimage:
+                        subimage.write(image.read(window=window))
+    
+    def map_path(self, f, map_type):
+        # Returns the map path of a given flight
+        cropped_path = map_type + '_cropped'
+        if self.flights[cropped_path][f] == self.flights[cropped_path][f]:
+            return self.flights[cropped_path][f]
+        return self.flights[map_type][f]
+    
+    def create_subimages_all_dir(self, num, size, resample_type='downsample'):
+        # Creates subimages with RandomSubimages for all the maps in self.flights_info
+        resamples_dir = os.path.join(os.path.dirname(self.output_path), 'resampled_maps')
+        if not os.path.exists(resamples_dir):
+            os.mkdir(resamples_dir)
+        for f in range(87, self.flights.shape[0]):
+            rgb_path = self.map_path(f, 'rgb')
+            dsm_path = self.map_path(f, 'dsm')
+            ir_path = self.map_path(f, 'ir')
+            print(rgb_path.split('/')[4])
+            paths = ResampleImages([rgb_path, dsm_path, ir_path], resample_type).resample_images(resamples_dir)
+            coordinates = RandomSubimages(paths[0]).create_subimages(num, size)
+            self.save_subimages(paths, self.flights['zone'][f], coordinates, size)
+        print('Done!')
+
+# set directories for the generator
+input_df = input('Enter a directory to .csv file with the flights and a directory to reach the images as columns:'\n)
+output_dir = input('Enter a directory to save the resampled data in:'\n)
+
+# create the resample object
+resample_image_generator = ResampleImages(flights_info = input_df, output_path = output_dir)
+
+# run the resampling process
+resample_image_generator.create_subimages_all_dir(num = 5, size = 1024)
