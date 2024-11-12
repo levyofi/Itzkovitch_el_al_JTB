@@ -1,4 +1,4 @@
-### Here we can found scripts to run physical deterministic model (before ML)
+### Here we can found scripts to run physical model
 To use the deterministic physical model, two steps are needed. 
 The first is to run R scripts to create input data (with or without meteorological data, depend on the user), and the second is to run julia script to get physical predictions.
 
@@ -23,7 +23,7 @@ The code need three parameters to run properly:
   - time of flight (format DD.MM.YY_HHMM)
   - timezone
 
-  4.1 `create_meteorological_df_NoStation.R:` this script does the same as the above script ("withStation"), and used for cases where online data are accessed instead of mobile station.
+  4.1 `create_meteorological_df_NoStation.R:` this script does the same as the above script ("withStation"), and used for cases where online data are accessed instead of mobile station. This optoin was not used in our study but we supply the code for users who do not have access to station data.
 
 ##  Step 2 - Physical model (in julia)
 To run the physical model script, julia environment need to be installed.
@@ -36,4 +36,4 @@ ARGS variable need to be set as following:
 - input = input folder.
 - output = output folder.
 
-The script generates the ground temperature predictions, and saves it in the output folder.
+The script generates a raster with the ground temperature predictions, and saves it in the output folder.
