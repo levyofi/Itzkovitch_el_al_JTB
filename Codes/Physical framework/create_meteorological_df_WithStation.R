@@ -145,95 +145,14 @@ for (ifile in 1:nrow(data_files)){
   soil_mois200 = soil_mois200/1000
   
   NSOIL=4
-  #write to binary data
-  to.write = file("input_for_micro.bin" ,"wb")
-  #write size of map - will be used for allocation
-  writeBin(con=to.write, object = length(solar[]), size = 4, endian = "little")
-  writeBin(con=to.write, object = as.integer(NSOIL), size = 4, endian = "little")
-  #write time, lat and lon
-  writeBin(to.write, object = lat, size = 4, endian = "little")
-  writeBin(to.write, object = lon, size = 4, endian = "little")
-  writeBin(to.write, object = as.numeric(dt), size = 4, endian = "little")
-  #write albedo and soil temps and moisture from GLDAS
-  writeBin(to.write, object = TG , size = 4, endian = "little")
-  writeBin(to.write, object = ALBEDO , size = 4, endian = "little")
-  writeBin(to.write, object = soil_temp10, size = 4, endian = "little")
-  writeBin(to.write, object = soil_temp40, size = 4, endian = "little")
-  writeBin(to.write, object = soil_temp100, size = 4, endian = "little")
-  writeBin(to.write, object = soil_temp200, size = 4, endian = "little")
-  writeBin(to.write, object = soil_mois10, size = 4, endian = "little")
-  writeBin(to.write, object = soil_mois40, size = 4, endian = "little")
-  writeBin(to.write, object = soil_mois100, size = 4, endian = "little")
-  writeBin(to.write, object = soil_mois200, size = 4, endian = "little")
-  #write other meteorological data
-  writeBin(to.write, object = WIND, size = 4, endian = "little")
-  writeBin(to.write, object = ir_emiss_ground, size = 4, endian = "little")
-  writeBin(to.write, object = ir_emiss_canopy, size = 4, endian = "little")
-  writeBin(to.write, object = pressure*100, size = 4, endian = "little") # *100 to convert from hPa to Pa
-  writeBin(to.write, object = TAIR, size = 4, endian = "little")
-  writeBin(to.write, object = QAIR, size = 4, endian = "little")
-  writeBin(to.write, object = RHOAIR, size = 4, endian = "little")
-  writeBin(to.write, object = TV, size = 4, endian = "little")
-  writeBin(to.write, object = TAH, size = 4, endian = "little")
-  writeBin(to.write, object = ir_emiss_sky, size = 4, endian = "little")
-  writeBin(to.write, object = cloud_cover, size = 4, endian = "little")
-  num_of_coords = length(heights[])
-  writeBin(to.write, object = as.vector(heights), size = 4, endian = "little")
-  num_of_coords = length(solar[])
-  writeBin(to.write, object = as.vector(solar), size = 4, endian = "little")
-  num_of_coords = length(shade[])
-  writeBin(to.write, object = as.vector(shade), size = 4, endian = "little")
-  num_of_coords = length(skyview[])
-  writeBin(to.write, object = as.vector(skyview), size = 4, endian = "little")
-  num_of_coords = length(r_tgi[])
-  writeBin(to.write, object = as.vector(r_tgi), size = 4, endian = "little")
-  writeBin(to.write, object = as.vector(temp)+273, size = 4, endian = "little")
-  close(to.write)
-}
-  # #write to binary data
-#   to.write = file("input_for_micro_sample.bin" ,"wb")
-#   #write size of map - will be used for allocation
-#   sample_size = ncell(r_tgi)
-#   writeBin(con=to.write, object = length(solar[1:sample_size]), size = 4, endian = "little")
-#   writeBin(con=to.write, object = as.integer(NSOIL), size = 4, endian = "little")
-#   #write time, lat and lon
-#   writeBin(to.write, object = lat, size = 4, endian = "little")
-#   writeBin(to.write, object = lon, size = 4, endian = "little")
-#   writeBin(to.write, object = as.numeric(dt), size = 4, endian = "little")
-#   #write albedo and soil temps and moisture from GLDAS
-#   writeBin(to.write, object = TG , size = 4, endian = "little")
-#   writeBin(to.write, object = ALBEDO , size = 4, endian = "little")
-#   writeBin(to.write, object = soil_temp10, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_temp40, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_temp100, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_temp200, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_mois10, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_mois40, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_mois100, size = 4, endian = "little")
-#   writeBin(to.write, object = soil_mois200, size = 4, endian = "little")
-#   #write other meteorological data
-#   writeBin(to.write, object = WIND, size = 4, endian = "little")
-#   writeBin(to.write, object = ir_emiss_ground, size = 4, endian = "little")
-#   writeBin(to.write, object = ir_emiss_canopy, size = 4, endian = "little")
-#   writeBin(to.write, object = pressure*100, size = 4, endian = "little") # *100 to convert from hPa to Pa
-#   writeBin(to.write, object = TAIR, size = 4, endian = "little")
-#   writeBin(to.write, object = QAIR, size = 4, endian = "little")
-#   writeBin(to.write, object = RHOAIR, size = 4, endian = "little")
-#   writeBin(to.write, object = TV, size = 4, endian = "little")
-#   writeBin(to.write, object = TAH, size = 4, endian = "little")
-#   writeBin(to.write, object = ir_emiss_sky, size = 4, endian = "little")
-#   writeBin(to.write, object = cloud_cover, size = 4, endian = "little")
-#   num_of_coords = length(heights[])
-#   writeBin(to.write, object = as.vector(heights)[1:sample_size], size = 4, endian = "little")
-#   num_of_coords = length(solar[])
-#   writeBin(to.write, object = as.vector(solar)[1:sample_size], size = 4, endian = "little")
-#   num_of_coords = length(shade[])
-#   writeBin(to.write, object = as.vector(shade)[1:sample_size], size = 4, endian = "little")
-#   num_of_coords = length(skyview[])
-#   writeBin(to.write, object = as.vector(skyview)[1:sample_size], size = 4, endian = "little")
-#   num_of_coords = length(r_tgi[])
-#   writeBin(to.write, object = as.vector(r_tgi)[1:sample_size], size = 4, endian = "little")
-#   writeBin(to.write, object = as.vector(temp)[1:sample_size]+273, size = 4, endian = "little")
-#   close(to.write)
-#   #setwd("..")
-# #}
+
+  meteo = data.frame(size = length(shade), NSOIL = NSOIL, width = ncol(shade), height = nrow(shade),
+                   Latitude = lat, Longitude = lon, Date = date,
+                   TG = TG, Albedo = ALBEDO, 
+                   ST10 = soil_temp10, ST40 = soil_temp40, ST100 = soil_temp100, ST200 = soil_temp200,
+                   SM10 = soil_mois10, SM40 = soil_mois40, SM100 = soil_mois100, SM200 = soil_mois200,
+                   Wind = WIND, IR_em_G = ir_emiss_ground, IR_em_C = ir_emiss_canopy,
+                   P = pressure, TAIR = TAIR, QAIR = QAIR, RHOAIR = RHOAIR,
+                   TV = TV, TAH = TAH, IR_em_S = ir_emiss_sky, Cloud_cover = cloud_cover)
+
+write.csv(meteo, paste0(wd, "Data/input_meteorological_data.csv"))
