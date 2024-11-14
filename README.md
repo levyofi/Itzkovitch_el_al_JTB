@@ -12,4 +12,4 @@ Microclimates are essential for understanding how organisms interact with their 
 # **Repository Directory**:
 ## See the following subdirectory for data and metadata: [link](https://github.com/levyofi/Itzkovitch_el_al_AI_assisted_microclimate_modeling/tree/main/Example%20data).
 
-## See the following subdirectory for codes: [link](https://github.com/levyofi/Itzkovitch_el_al_AI_assisted_microclimate_modeling/tree/main/Code).
+## See the following subdirectory for codes: [link](https://github.com/levyofi/Itzkovitch_el_al_AI_assisted_microclimate_modeling/tree/main/Codes).
