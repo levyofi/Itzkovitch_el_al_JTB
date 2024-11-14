@@ -1,6 +1,6 @@
 # Using machine learning to correct biases in microclimate predictions
 
-_Alon Itzkovitch, Idan Sulami, Ronny Doron Efroni, Shimon Shahar, Michael Kearney, and
+_Alon Itzkovitch, Idan Sulami, Ronny Doron Efroni, Moni Shahar, and
 Ofir Levy_
 
 ### Please contact Ofir Levy (levyofir@tauex.tau.ac.il) about the code or data
