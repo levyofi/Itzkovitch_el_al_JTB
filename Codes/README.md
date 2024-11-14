@@ -1,31 +1,41 @@
-# Codes
-The codes consist of three parts/steps:
-## Step 1 - Physical framework
-`Physical framework folder.`
-- how to create the data script (in R).
-- physical model script (in julia).
-## Step 2 - Statistical framework
-`Statistical framework folder.`
+# Code for Microclimate Modeling and Bias-Correction
 
-The machine  learning model. 
-- random forest model script (in python).
-## Step 3 - Analysis and figures
-`Figures folder.`
-- A script for each figure in the main text and supplementary (in both R and python).
+This folder contains the code used in our study on microclimate modeling and machine learning-based bias correction. The code is organized into three main stages, each with its own set of scripts and instructions.
 
-## Environment setups
-Three environments were set for this codes:
+## Overview
 
-**`R:`**
+The code integrates physical modeling and machine learning to improve the accuracy of ground temperature predictions. This folder includes:
+1. Scripts for setting up and running the physical microclimate model.
+2. A machine learning model to correct biases in the physical model's predictions.
+3. Scripts for data analysis and generating publication-quality figures.
 
-No ibraries should be downloaded.
+## Repository Structure
 
-R version should be 2.9.1 or lower, in order to use rgdal package.
+- **`Physical framework`**: Code for setting up and running the physical model. 
 
-**`Julia:`**
+- **`Statistical framework`**: Code for the machine learning bias-correction model. 
 
-Many packages are downloaded during the script. However, all of them are downloaded automatically at the begining of the script.
+- **`Figures`**: Scripts for generating analysis and figures.
 
-**`Python:`**
+## Getting Started
 
-A pre-downloaded packages were used in python.
+### Prerequisites
+To run the code, you need the following software environments:
+
+- **R**: Version 4.2.x or lower to ensure compatibility with the `rgdal` and raster packages. 
+- **Julia**: Required packages are automatically downloaded at the start of the script.
+- **Python**: Ensure that all necessary packages (listed in `requirements.txt` if available) are installed in your Python environment.
+
+### Running the Code
+
+1. **Stage 1: Physical Framework**
+   - Navigate to the `Physical framework` folder.
+   - Run the R script for data preparation, then execute the Julia script to run the physical model.
+
+2. **Stage 2: Statistical Framework**
+   - Navigate to the `Statistical framework` folder.
+   - Run the Python script to train the random forest model and correct the physical model’s biases.
+
+3. **Stage 3: Analysis and Figures**
+   - Navigate to the `Figures` folder.
+   - Run the relevant scripts in R and Python to reproduce all figures for the paper.
