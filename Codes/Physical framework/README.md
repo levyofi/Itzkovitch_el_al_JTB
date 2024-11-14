@@ -1,11 +1,11 @@
 ### Here we can found scripts to run physical model
 To use the deterministic physical model, two steps are needed. 
-The first is to run R scripts to create input data (with or without meteorological data, depend on the user), and the second is to run julia script to get physical predictions.
+The first is to create input data (with or without meteorological data, depend on the user), and the second is to run julia script to get physical predictions.
 
 ## Step 1 - convert drone images to maps and create input data (python, R and Pix4DMapper)
-1. The first step is to create the model input data. In order to do so, one needs to convert the raw drone maps into input maps (tif format), as well as creating a meteorological dataframe.
+1. The first step is to create the model input data. In order to do so, one needs to convert the raw drone maps into input maps (tif format). Sample of raw images and output maps of the Pix4DMapper software can be found here: https://www.dropbox.com/scl/fo/gdbcxlopjvtx322r9rpzg/AB-O3S26Q1kwgmXdQO8AE2o?rlkey=lya1lx76xqd7ivrgtzeeqiggy&dl=0
 
-We used Pix4DMapper software as the first image proccessing stage.
+The user also need to creatw a dataframe with meteorological data.
 
 2. `create_input_maps.R:` Next, we convert the maps from Pix4DMapper software (DSM, DTM, RGB) into input maps (TGI, height, real solar, skyview and shade) using the attached script.  
 
