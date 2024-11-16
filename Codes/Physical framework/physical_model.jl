@@ -154,8 +154,6 @@ args = map(x -> string(x), ARGS) ;
 working_directory = String(args[1]) ;
 meteoro = CSV.read(working_directory * "input_data/input_meteorological_data.csv", DataFrame) ;
 
-lat = meteoro.Latitude[1] ;
-lon = meteoro.Longitude[1] ;
 timeValues_num = meteoro.Date[1] ;
 TG = meteoro.TG[1] ;
 ALBEDO = meteoro.Albedo[1] ;

@@ -1,8 +1,7 @@
 #create data file for physical microclimate model
-setwd("~/eclipse workspace/downscaling/for_paper")
-library(RgoogleMaps)
+#setwd("~/eclipse workspace/downscaling/for_paper")
+#library(RgoogleMaps)
 library(rgdal)
-
 library(knitr)
 library(leaflet)
 
@@ -14,6 +13,7 @@ library(stringr)
 library(raster)
 library(humidity)
 library(bigleaf)
+
 specific_humidity = function(RH, T){#RH - relative humidity [0-100 %]; T - air temperature [Kelvin]
   qair = SH(vapor_pressure(RH, T))
   qair
