@@ -46,7 +46,7 @@ meteo <- data.frame()
 #For the github example - choose the relevant flight
 is_example=TRUE #change to FALSE when working on all maps
 if (is_example){
-  data_files=data_files[31,]
+  data_files=data_files[data_files$map=="Zeelim_31.05.21_1516",]
 }
 
 # Loop through each row of the data_files table

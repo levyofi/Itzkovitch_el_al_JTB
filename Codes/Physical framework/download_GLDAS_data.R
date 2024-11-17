@@ -20,7 +20,7 @@ data_files <- read.table("Example data/Input data/flights_info_final.csv",
 # Otherwise, set `is_example = FALSE` to process all maps.
 is_example = TRUE  # Change to FALSE when working on all maps
 if (is_example) {
-  data_files = data_files[31, ]  # Select the 31st row as an example (adjust index as needed)
+  data_files = data_files[data_files$map=="Zeelim_31.05.21_1516", ]  # Select the 31st row as an example (adjust index as needed)
 }
 
 # Loop through each row of the data_files table:
@@ -50,7 +50,7 @@ for (ifile in 1:nrow(data_files)) {
   file_str = paste(year(date), str_pad(julian_day, width = 3, pad = "0"), str_file, sep = "/")
   
   # Set the local file path for downloading
-  downloaded_file_path <- str_file
+  downloaded_file_path <- paste("Example data/Input data",map,str_file, sep="/")
   
   # Configure the session for downloading:
   # Enables session handling using .netrc and cookies.
