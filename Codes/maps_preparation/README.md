@@ -7,7 +7,7 @@ The code in this folder is used to create the input maps of the physical and mac
 ## Generating 5 random maps 
 The code in `main.py` generates random 1100x1100 pixel maps of RGB, Digital Surface Model (DSM), and ground temperature (IR). 
 
-The code reads the original maps from Pix4DMapper, and saves the output maps in a folder with the name of the flight. In the example of this repository, the maps will be saved at `Example data/Input data/Zeelim_31.05.21_1516`. The code uses the table in `Example data/Input data/flights_info_final.csv` to find the files in our server.
+The code reads the original maps from Pix4DMapper, and saves the output maps in a folder with the name of the flight. In the example of this repository, the maps will be saved at `Example data/Input data/Zeelim_31.05.21_1516`. The code uses the table in `Example data/Input data/flights_info_final.csv` to find the original RGB, DSM, and IR maps in our server.
 
 More information and explanation about using the code can be found in `Resampling Usage.md`. 
 
