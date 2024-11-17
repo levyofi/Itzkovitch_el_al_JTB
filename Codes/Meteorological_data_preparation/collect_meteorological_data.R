@@ -102,7 +102,7 @@ for (ifile in 1:nrow(data_files)) {
   middle_coords_latlon <- project(middle_coords, "EPSG:4326")
 
   #Get the GLDAS file name
-  nc_name <- list.files(path = "Example data/Input data/", pattern = paste0("^.*", format(dt_rounded, "%Y%m%d.%H00"), ".*.nc4"), full.names = TRUE)
+  nc_name <- list.files(path = ".", pattern = paste0("^.*", format(dt_rounded, "%Y%m%d.%H00"), ".*.nc4"), full.names = TRUE)
   
   #extract the data
   ALBEDO <- get_value_lat_lon(middle_coords_latlon, "Albedo_inst", nc_name)
@@ -131,6 +131,6 @@ for (ifile in 1:nrow(data_files)) {
 }
 
 # Save the consolidated meteorological data to a CSV file
-write.csv(meteo, "input_meteorological_data.csv", row.names = FALSE)
+write.csv(meteo, "../input_meteorological_data.csv", row.names = FALSE)
 
 print("Processing complete. Consolidated data saved.")
