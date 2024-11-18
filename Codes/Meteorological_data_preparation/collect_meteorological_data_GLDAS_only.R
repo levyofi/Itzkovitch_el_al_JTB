@@ -12,8 +12,9 @@ specific_humidity <- function(RH, T) { # RH - relative humidity [0-100 %]; T - a
   qair
 }
 
-vapor_pressure <- function(RH, T) { # RH - relative humidity [0-100 %]; T - air temperature [Kelvin]
+vapor_pressure <- function(QAIR, T, pressure) { # RH - relative humidity [0-100 %]; T - air temperature [Kelvin]
   SVP <- SVP(T) # return hPa 
+  RH = SH2RH(QAIR, T, pressure)
   SVP * RH / 100 * 100 # return Pa
 }
 
@@ -96,10 +97,15 @@ for (ifile in 1:nrow(data_files)) {
   
   # Additional radiation and solar variables
   SWD <- get_value_lat_lon(middle_coords_latlon, "SWdown_f_tavg", nc_name)
-  SWN <- get_value_lat_lon(middle_coords_latlon, "Swnet_tavg", nc_name)
   real_solar <- SWD
   clean_solar <- max(cleansky_solar[slope < 0.1 & shade == 0], na.rm = TRUE)
   cloud_cover <- max(0, 1 - real_solar / clean_solar)
+  
+  #calculare other needed variables
+  RHOAIR = air.density(TAIR - 273.15, pressure/1000) #pressure in GLDAS is in Pa units and the function needs kPa
+  TV = TAIR
+  TAH= TAIR 
+  SKYEMISS = 1.72*( (vapor_pressure(QAIR, TAIR, pressure)/1000)/TAIR)^(1/7)
   
   #### Extract GLDAS soil and albedo data ####
   ALBEDO <- get_value_lat_lon(middle_coords_latlon, "Albedo_inst", nc_name)
@@ -119,7 +125,8 @@ for (ifile in 1:nrow(data_files)) {
     Albedo = ALBEDO,
     ST10 = soil_temp10, ST40 = soil_temp40, ST100 = soil_temp100, ST200 = soil_temp200,
     SM10 = soil_mois10, SM40 = soil_mois40, SM100 = soil_mois100, SM200 = soil_mois200,
-    Wind = WIND, Pressure = pressure, TAIR = TAIR, QAIR = QAIR, Cloud_cover = cloud_cover
+    Wind = WIND, Pressure = pressure, TAIR = TAIR, QAIR = QAIR, Cloud_cover = cloud_cover,
+    RHOAIR = RHOAIR, TV = TV, TAH=TAH, SKYEMISS = SKYEMISS
   )
   
   # Append to meteo dataframe

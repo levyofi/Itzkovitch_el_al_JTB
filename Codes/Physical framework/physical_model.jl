@@ -89,6 +89,8 @@ Z0SNO  = 0.002     ;   # snow surface roughness length (m) (0.002)
 SSI    = 0.03      ;   # liquid water holding capacity for snowpack (m3/m3) (0.03)
 SWEMX  = 1.00      ;  # new snow mass to fully cover old snow (mm)
 CSOIL = 2.00E+6    ;   # vol. soil heat capacity (j/m3/K)
+EMG = 0.95 	   ;  # ground emissivity (dec %)
+EMV = 0.95 	   ;  # canopy emissivity (dec %)
 
 # ---------------------------------------------------------
 # Noah-mp configuration variables:
@@ -160,15 +162,13 @@ ALBEDO = meteoro.Albedo[1] ;
 TSLB = [meteoro.ST10[1], meteoro.ST40[1], meteoro.ST100[1], meteoro.ST200[1]] ; 
 SMOIS = [meteoro.SM10[1], meteoro.SM40[1], meteoro.SM100[1], meteoro.SM200[1]] ; 
 WIND = meteoro.Wind[1] ;
-EMG = meteoro.IR_em_G[1] ;
-EMV = meteoro.IR_em_C[1] ;
 PSFC = meteoro.P[1] ;
 TAIR = meteoro.TAIR[1] ;
 QAIR = meteoro.QAIR[1] ;
 RHOAIR = meteoro.RHOAIR[1] ;
 TV = meteoro.TV[1] ;
 TAH = meteoro.TAH[1] ;
-SKYEMISS = meteoro.IR_em_S[1] ;
+SKYEMISS = meteoro.SKYEMISS[1] ;
 CLD  = meteoro.Cloud_cover[1] ;
 
 HVEG = get_map_data("height") ;

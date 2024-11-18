@@ -88,6 +88,12 @@ for (ifile in 1:nrow(data_files)) {
   real_solar <- station$radiation
   cloud_cover <- max(0, 1 - real_solar / clean_solar)
   
+  #calculare other needed variables
+  RHOAIR = air.density(TAIR - 273.15, pressure/10) # pressure is in hPa and the function needs kPa
+  TV = TAIR
+  TAH= TAIR 
+  SKYEMISS = 1.72*( (vapor_pressure(RH, TAIR)/1000)/TAIR)^(1/7)
+
   ####  extract GLDAS data ####
   # Get the extent of the rast object
   e <- ext(solar)
@@ -123,7 +129,8 @@ for (ifile in 1:nrow(data_files)) {
     TG = TG, Albedo = ALBEDO,
     ST10 = soil_temp10, ST40 = soil_temp40, ST100 = soil_temp100, ST200 = soil_temp200,
     SM10 = soil_mois10, SM40 = soil_mois40, SM100 = soil_mois100, SM200 = soil_mois200,
-    Wind = WIND, Pressure = pressure, TAIR = TAIR, QAIR = QAIR, Cloud_cover = cloud_cover
+    Wind = WIND, Pressure = pressure, TAIR = TAIR, QAIR = QAIR, Cloud_cover = cloud_cover,
+    RHOAIR = RHOAIR, TV = TV, TAH=TAH, SKYEMISS = SKYEMISS
   )
   
   # Append to meteo dataframe
