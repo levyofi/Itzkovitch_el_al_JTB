@@ -6,6 +6,7 @@ library(humidity)
 library(bigleaf)
 library(suncalc)
 library(sf)
+library(sp)
 library(rgrass)
 library(terra)
 
@@ -82,6 +83,9 @@ for (ifile in 1:nrow(data_files)) {
     
     # Import DSM to GRASS and calculate slope and aspect, and save the slope raster to a file
     execGRASS("r.in.gdal", parameters = list(input = dsm_names[i], output = "dsm"), flags = c("quiet", "overwrite"))
+    # Set the region extent to the dsm raster
+    execGRASS("g.region", parameters = list(raster="dsm"))  
+    # Calculate slope and aspect
     execGRASS("r.slope.aspect", flags = c("overwrite"), parameters = list(elevation = "dsm", slope = "slope", aspect = "aspect"))
     execGRASS("r.out.gdal", flags = "overwrite", parameters = list(createopt = "PROFILE=GeoTIFF,TFW=YES", output = filename_slope, input = "slope"))
     
