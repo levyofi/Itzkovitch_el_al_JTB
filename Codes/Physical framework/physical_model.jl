@@ -28,6 +28,8 @@ catch
     using DelimitedFiles
 end
 
+cd("/home/ofir/Dropbox/git_projects/Itzkovitch_el_al_Proceedings_B/Codes/")
+
 const AG = ArchGDAL;
 ###############################################################################
 ############################# DECLARATION #####################################
@@ -131,9 +133,9 @@ function get_raster_data(name)
     global working_directory
     raster = 1
     try
-        raster = AG.read(working_directory * "input_data/" * name * ".tif"); 
+        raster = AG.read(working_directory * "/" * name * ".tif"); 
     catch
-        raster = AG.read(working_directory * "input_data/" * name * ".tiff");
+        raster = AG.read(working_directory * "/" * name * ".tiff");
     end
     band = AG.getband(raster, 1);
     map = AG.read(band);
@@ -154,28 +156,7 @@ ARGS = ["../Example data/Input data",
 
 args = map(x -> string(x), ARGS) ; 
 working_directory = String(args[1]) ;
-meteoro = CSV.read(working_directory * "input_data/input_meteorological_data.csv", DataFrame) ;
-
-timeValues_num = meteoro.Date[1] ;
-TG = meteoro.TG[1] ;
-ALBEDO = meteoro.Albedo[1] ;
-TSLB = [meteoro.ST10[1], meteoro.ST40[1], meteoro.ST100[1], meteoro.ST200[1]] ; 
-SMOIS = [meteoro.SM10[1], meteoro.SM40[1], meteoro.SM100[1], meteoro.SM200[1]] ; 
-WIND = meteoro.Wind[1] ;
-PSFC = meteoro.P[1] ;
-TAIR = meteoro.TAIR[1] ;
-QAIR = meteoro.QAIR[1] ;
-RHOAIR = meteoro.RHOAIR[1] ;
-TV = meteoro.TV[1] ;
-TAH = meteoro.TAH[1] ;
-SKYEMISS = meteoro.SKYEMISS[1] ;
-CLD  = meteoro.Cloud_cover[1] ;
-
-HVEG = get_map_data("height") ;
-SWDOWN = get_map_data("solar") ;
-SHADE = get_map_data("shade") ;
-SKYVIEW = get_map_data("skyview") ;
-TGI = get_map_data("tgi") ;
+meteoro = CSV.read(working_directory * "/input_meteorological_data.csv", DataFrame) ;
 
 soiltype = parse(Int, (args[3])) ; 
 if soiltype == 0
@@ -196,15 +177,12 @@ end
 ########################### MODELING FUNCTIONS #########################
 ########################################################################
 
-function surface_temp(dz, dair, perm)
+function surface_temp(dz, dair, perm, n)
     # previously called surfacet. 
     # compute surface temperature (?)
     #dz -> soil layer thickness (m)
     #dair -> air layer thickness (m)  
     
-    # global all - how to?
-    n = meteoro.width[1] ; # number of coords - one row each permutation
-
     # create depth array
     NSOIL = UInt8(floor(2/dz)) ;
     NAIR = UInt8(floor(2/dair)) ;
@@ -1020,49 +998,103 @@ end
 ########################################################################
 ############################## MODELING ################################
 ########################################################################
+meteoro = CSV.read(working_directory * "/input_meteorological_data.csv", DataFrame) ;
 
-output_folder = args[2] ;
+# global map_name, timeValues_num, TG, ALBEDO, TSLB, SMOIS, WIND, PSFC, TAIR, QAIR, RHOAIR, TV, TAH, SKYEMISS, CLD, HVEG, SWDOWN, SHADE, SKYVIEW, TGI
 
-surf_temp_all = zeros(Float16, (meteoro.height[1], meteoro.width[1])) ;
-
-println("Start Surface Temprature Calculation")
-for h in 1: meteoro.height[1]
-    global meteoro; 
-    if h%(round(meteoro.height[1]/100)) == 0
-        print("#")
-    end
-    surf_temp = surface_temp(0.03, 0.03, h) ; # h refer to the permutation number
-    surf_temp_all[:,h] = surf_temp ;
+# Use a specific map for an example (for GitHub demonstration purposes)
+is_example = true  # Set to false to process all maps
+if is_example
+    meteoro = filter(row -> row.map == "Zeelim_31.05.21_1516", meteoro)
 end
-println("")
-println("End Surface Temprature Calculation")
 
-# write matrix
-writedlm(output_folder*"matrix.csv", surf_temp_all)
+# Loop through each row in the meteorological data
+for row in eachrow(meteoro)
 
-# writing the raster
-dataset = AG.read("/"*working_directory*"/skyview.tiff") ;
-ref = AG.getproj(dataset) ;
-geotransform = AG.getgeotransform(dataset) ;
+    # Extract variables for the current row
+    global map_name = row.map
+    global timeValues_num = row.Date
+    global TG = row.TG
+    global ALBEDO = row.Albedo
+    global TSLB = [row.ST10, row.ST40, row.ST100, row.ST200]
+    global SMOIS = [row.SM10, row.SM40, row.SM100, row.SM200]
+    global WIND = row.Wind
+    global PSFC = row.Pressure
+    global TAIR = row.TAIR
+    global QAIR = row.QAIR
+    global RHOAIR = row.RHOAIR
+    global TV = row.TV
+    global TAH = row.TAH
+    global SKYEMISS = row.SKYEMISS
+    global CLD = row.Cloud_cover
 
-outfile = "/"*output_folder*"/predicted_thermo.tif" ; # output_folder * "prediction.tif" ; 
+    # Create output folder if it doesn't exist
+    output_folder = args[2] * map_name
+    if !isdir(output_folder)
+        mkpath(output_folder)
+    end
+    
+    # Nested loop from 1 to 5 for map index
+    for map_idx in 1:5
+        # Read map data for the current map index
+        global HVEG = get_raster_data("cropped_"* map_name * "/height_" * string(map_idx))
+        global SWDOWN = get_raster_data("cropped_"* map_name * "/solar_" * string(map_idx))
+        global SHADE = get_raster_data("cropped_"* map_name * "/shade_" * string(map_idx))
+        global SKYVIEW = get_raster_data("cropped_"* map_name * "/skyview_" * string(map_idx))
+        global TGI = get_raster_data("cropped_"* map_name * "/TGI_" * string(map_idx))
 
-AG.create(
-    outfile,
-    driver = AG.getdriver("GTiff"),
-    width = ArchGDAL.width(dataset),
-    height = ArchGDAL.height(dataset),
-    nbands = 1,
-    dtype = Float64
-) do raster
-    AG.setgeotransform!(raster, geotransform) ;
-    AG.setproj!(raster, ref) ;
-    AG.write!(
-        raster,
-        convert(Array{Float64}, surf_temp_all), # image to "burn" into the raster
-        1, # update band 1
-    )
-end 
+        # Initialize the surface temperature matrix
+        # Read dimensions from one of the rasters to determine raster size
+        reference_raster = AG.read(working_directory * "/cropped_" * map_name * "/height_" * string(map_idx) * ".tif")  # Example raster to use as reference
+        raster_size = (AG.height(reference_raster), AG.width(reference_raster))
 
-# dispaly the raster  
-display(heatmap(surf_temp_all))
+        println("Start Surface Temperature Calculation")
+
+        # Loop through raster rows
+        surf_temp_all = zeros(Float64, (raster_size[1], raster_size[2])) ;
+        for h in 1:raster_size[1]
+            global meteoro
+            if h % round(raster_size[1] / 100) == 0
+                print("#")
+            end
+
+            # Compute surface temperature (h refers to the permutation number)
+            surf_temp = surface_temp(0.03, 0.03, h, raster_size[2])
+            surf_temp_all[:, h] = surf_temp
+        end
+
+        println("")
+        println("End Surface Temperature Calculation")
+
+        # Write the matrix to a CSV file
+        writedlm(output_folder * "/matrix_" * string(map_idx) * ".csv", surf_temp_all)
+
+        # Writing the raster
+        dataset = AG.read(working_directory * "/skyview.tiff")
+        ref = AG.getproj(dataset)
+        geotransform = AG.getgeotransform(dataset)
+
+        outfile = output_folder * "/predicted_thermo_" * string(map_idx) * ".tif"
+
+        AG.create(
+            outfile,
+            driver = AG.getdriver("GTiff"),
+            width = raster_size[2],
+            height = raster_size[1],
+            nbands = 1,
+            dtype = Float64
+        ) do raster
+            AG.setgeotransform!(raster, geotransform)
+            AG.setproj!(raster, ref)
+            AG.write!(
+                raster,
+                convert(Array{Float64}, surf_temp_all), # Image to "burn" into the raster
+                1 # Update band 1
+            )
+        end
+
+        # Display the raster as a heatmap
+        display(heatmap(surf_temp_all))
+    end
+
+end
