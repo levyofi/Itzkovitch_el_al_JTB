@@ -83,10 +83,10 @@ class RF_Correction_Model():
         files_dict['MainFlight'] = [f.split('/')[-1][:-26] for f in temp_list]
         for name in self.unique_flights:
             for feature in self.features:
-              tmp_list = glob.glob(f'{path}/Input data/{name}/{feature}_*.tif')
+              tmp_list = glob.glob(f'{path}/Input data/cropped_{name}/{feature}_*.tif')
               tmp_list.sort()
               files_dict[feature] += tmp_list
-            ir_list = glob.glob(f'{path}/Input data/{name}/*thermal_ir_*.tif')
+            ir_list = glob.glob(f'{path}/Input data/cropped_{name}/*thermal_ir_*.tif')
             ir_list.sort()
             files_dict['IR'] += ir_list
         print({k:len(v) for k,v in files_dict.items()})
