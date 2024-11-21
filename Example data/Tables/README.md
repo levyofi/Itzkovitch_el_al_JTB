@@ -1,4 +1,5 @@
 ### In this folder all relevant tables and dataframes that are used in the codes attached.
+- `station_correction_value.csv:` table with distances between a station and IR-pixel (at the exact same location), represents the shift between station (real temperature) and IR temperature values.
 - `met_data.csv:` meteorological data file.
 - `RF_CorrectionModel_summary.csv:` dataframe that summarize the results of all models (pysical and machine learning) for every cropped map.
 - `SampledPixels.csv:` dataframe contains 1,000 sampled pixels for every test map, in order to visualize the results.
