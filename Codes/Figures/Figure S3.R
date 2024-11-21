@@ -77,7 +77,7 @@ param_labels <- list(
   TGI = "TGI",
   Height = "Height (m)",
   Shade = "Shade (yes/no)",
-  RealSolar = "Real Solar Radiation (W/m^2)",
+  RealSolar = expression("Solar Radiation (W/m"^2*")"),
   Skyview = "Skyview Factor (%)"
 )
 
