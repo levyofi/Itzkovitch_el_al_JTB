@@ -4,17 +4,16 @@ import pandas as pd
 import numpy as np
 from osgeo import gdal
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression, ElasticNet
 from sklearn.metrics import r2_score
 import pickle
 import matplotlib.pyplot as plt
 import os
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVR
-
+from pathlib import Path
 
 #%% Data
+
+
 '''
 The input folder arranges as followed:
 
@@ -23,11 +22,35 @@ physical_model folder >> physical prediction files.
 cropped_maps folder >> contain subfolders with flight's input data
 '''
 
+script_dir = Path(__file__).resolve()
+pwd = script_dir.parents[2]
+main_path = str(pwd) #input('Enter Folder Path for Maps:\n')
 fold_name = 'Example data' #input('Enter Folder Name (to save data in):\n')
-main_path = '..' #input('Enter Folder Path for Maps:\n')
 fold_path = f'{main_path}/{fold_name}'
 
 #%% Model Class
+
+def semi_random_sample(matrix_size, num_samples):
+    submat_size = matrix_size // int(np.sqrt(num_samples))
+    submat_steps = int(matrix_size / submat_size)
+    
+    points = []
+    for i in range(submat_steps): 
+        for j in range(submat_steps):
+            x_start, x_end = i * submat_size, (i + 1) * submat_size
+            y_start, y_end = j * submat_size, (j + 1) * submat_size
+    
+            x = np.random.randint(x_start, x_end)
+            y = np.random.randint(y_start, y_end)
+            
+            points.append(int(x*matrix_size + y))
+            
+    while len(points) < 1000:
+        x = np.random.randint(0, matrix_size)
+        y = np.random.randint(0, matrix_size)
+        points.append(int(x*matrix_size + y))
+        
+    return points
 
 '''
 We wrote the model as a python class, with the functions below:
@@ -45,27 +68,28 @@ class RF_Correction_Model():
         Create model class.
         At initiation - create dataframe that contain all paths to input maps
         '''
-        X_path = path + '/input_data/'
-        y_path = path + '/input_data'
 
         self.name = name
         self.N = map_size
         self.features = ['TGI', 'height', 'shade', 'real_solar', 'skyview']
 
         files_dict = {'IR':[], 'TGI':[], 'height':[], 'shade':[], 'real_solar':[], 'skyview':[]}
-        temp_list = glob.glob(f'{y_path}/*.tif')
+        temp_list = glob.glob(f'{path}/Output data/*.tif')
         temp_list.sort()
         files_dict['M1'] = temp_list # before ML
-        flights = [f.split('/')[-1][:-6] for f in temp_list]
+        flights = [f.split('/')[-1][:-24] for f in temp_list] # from filelist, extract flight date and number
+        self.unique_flights = [f.split('/')[-1][:-26] for f in temp_list[::5]] 
         files_dict['Flight'] = flights
-        for name in np.unique(flights):
+        files_dict['MainFlight'] = [f.split('/')[-1][:-26] for f in temp_list]
+        for name in self.unique_flights:
             for feature in self.features:
-              temp_list = glob.glob(f'{X_path}/{name}/{feature}_*.tif')
-              temp_list.sort()
-              files_dict[feature] += temp_list
-            temp_list = glob.glob(f'{path}/IR_fixed/{name}*.npy')
-            temp_list.sort()
-            files_dict['IR'] += temp_list
+              tmp_list = glob.glob(f'{path}/Input data/{name}/{feature}_*.tif')
+              tmp_list.sort()
+              files_dict[feature] += tmp_list
+            ir_list = glob.glob(f'{path}/Input data/{name}/*thermal_ir_*.tif')
+            ir_list.sort()
+            files_dict['IR'] += ir_list
+        print({k:len(v) for k,v in files_dict.items()})
 
         self.files_df = pd.DataFrame(files_dict)
 
@@ -84,9 +108,9 @@ class RF_Correction_Model():
                }
 
         for flight in self.train_flights:
-            subset = self.files_df[self.files_df['Flight'] == flight].reset_index()
+            subset = self.files_df[self.files_df['MainFlight'] == flight].reset_index()
             for crop in range(len(subset)):
-                rand = np.random.randint(0,self.N**2, pixels) # list of random indexes from the map
+                rand = semi_random_sample(self.N, pixels) # list of random indexes from the map
                 m = np.zeros((self.N,self.N)).flatten()
                 m[rand] = 1
                 masks[f'{flight}_{crop}'] = m.reshape((self.N, self.N))
@@ -101,7 +125,7 @@ class RF_Correction_Model():
                 dctRF['PredM1'] += list(pred_m1)
 
                 pred_error_m1 = gdal.Open(subset['M1'][crop]).ReadAsArray().flatten()[rand] - \
-                    np.load(subset['IR'][crop]).flatten()[rand] - 273.16
+                    gdal.Open(subset['IR'][crop]).ReadAsArray().flatten()[rand] - 273.16
                 dctRF['PredErrorM1'] += list(pred_error_m1 - np.nanmean(pred_error_m1)) # centralized to calculate the residuals
 
         train_df_rf = pd.DataFrame(dctRF)
@@ -115,7 +139,7 @@ class RF_Correction_Model():
         '''
         run basic random forest pipeline on the training data.
         '''
-        X = self.RF_train_df.drop(['index', 'PredErrorM1'],1)
+        X = self.RF_train_df.drop(['index', 'PredErrorM1'], axis = 1)
         y = self.RF_train_df['PredErrorM1']
 
         rf_model = RandomForestRegressor(random_state=42, n_estimators = 100, max_depth=10)
@@ -143,10 +167,10 @@ class RF_Correction_Model():
         for maps in test set (not in train set), the function create dataframe from
         input maps and run the model.
         '''
-        for flight in self.files_df['Flight'].unique():
+        for flight in self.unique_flights:
             if flight in list(self.train_flights):
                 continue
-            subset = self.files_df[self.files_df['Flight'] == flight].reset_index()
+            subset = self.files_df[self.files_df['MainFlight'] == flight].reset_index()
             for crop, sub_flight in enumerate(subset['M1']):
                 name = sub_flight.split('/')[-1][:-4]
                 tgi = gdal.Open(subset['TGI'][crop]).ReadAsArray().flatten()
@@ -161,14 +185,13 @@ class RF_Correction_Model():
                                      'Shade':shade, 'RealSolar':real_solar, 'Skyview':skyview})
 
                 m2_map = self.RFModel.predict(dataRF).reshape((self.N, self.N))
-                np.save(f'{path}/Output data/{name}_Model_RF.npy', m2_map)
+                np.save(f'{path}/Output data/{name}_Correction_map.npy', m2_map)
 
 #%% Run the model
 
 # train the model
-train_maps = "Zeelim_29.5.19_0830,Zeelim_29.5.19_1650,Zeelim_29.5.19_1730,Zeelim_30.5.19_0600,Zeelim_30.5.19_0630,Zeelim_18.9.19_0900,Zeelim_18.9.19_1200,Zeelim_18.9.19_1300,Zeelim_18.9.19_1400,Zeelim_18.9.19_1500,Zeelim_18.9.19_1720,Zeelim_7.11.19_1030,Zeelim_7.11.19_1100,Zeelim_7.11.19_1310,Zeelim_7.11.19_1550,Zeelim_7.11.19_1640,Zeelim_30.1.20_0810,Zeelim_30.1.20_0920,Zeelim_30.1.20_0950,Zeelim_30.1.20_1050,Zeelim_30.1.20_1200,Zeelim_30.1.20_1300,Zeelim_30.1.20_1350,Zeelim_30.1.20_1449,Zeelim_30.1.20_1523"
-train_set = train_maps.split(',')
-model2 = RF_Correction_Model(main_path, 'afterML')
+train_set = ["Zeelim_31.05.21_1516"]
+model2 = RF_Correction_Model(main_path + '/Example data', 'afterML')
 model2.split_data(1_000, train_set)
 model2.trainRF(plot = True)
 
