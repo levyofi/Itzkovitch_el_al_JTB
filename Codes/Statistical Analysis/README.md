@@ -1,8 +1,6 @@
 # Statistical Analysis
 
-This folder contains the scripts used for conducting Bayesian statistical analyses as part of the study *"From Big Data to Small Scales: Using Machine Learning to Correct Biases in Microclimate Predictions"* by Itzkovitch et al.
-
-The analyses focus on comparing model errors (ME, MAE, and MSE) before and after machine learning correction, and on understanding the relationships between environmental parameters and microclimate model biases using PyMC for Bayesian modeling.
+This folder contains the scripts used for conducting Bayesian statistical analyses. The analyses focus on comparing model errors (ME, MAE, and MSE) before and after machine learning correction, and on understanding the relationships between environmental parameters and microclimate model biases using PyMC for Bayesian modeling.
 
 ## Folder Contents
 
