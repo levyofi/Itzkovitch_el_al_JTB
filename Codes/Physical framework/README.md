@@ -1,31 +1,5 @@
-### Here we can found scripts to run physical model
-To use the deterministic physical model, two steps are needed. 
-The first is to create input data (with or without meteorological data, depend on the user), and the second is to run julia script to get physical predictions.
+# The physical mircoclimate model
 
-## Step 1 - convert drone images to maps and create input data (python, R and Pix4DMapper)
-1. The first step is to create the model input data. In order to do so, one needs to convert the raw drone maps into input maps (tif format). Sample of raw images and output maps of the Pix4DMapper software can be found here: https://www.dropbox.com/scl/fo/gdbcxlopjvtx322r9rpzg/AB-O3S26Q1kwgmXdQO8AE2o?rlkey=lya1lx76xqd7ivrgtzeeqiggy&dl=0
-
-The user also need to creatw a dataframe with meteorological data.
-
-2. `create_input_maps.R:` Next, we convert the maps from Pix4DMapper software (DSM, DTM, RGB) into input maps (TGI, height, real solar, skyview and shade) using the attached script.  
-
-The code need three parameters to run properly: 
-  - folder in which images are saved
-  - date of flight
-  - time of flight
-
-3. `resample_images.py:` cropped the map into 5 sub-maps with  1,000*1,000 shape.
-
-4. `create_meteorological_df_WithStation.R:` the script stands for taking meteorological data recorded in a mobile meteorological station (saved in dataframe, each row related to one flight), merge it with an online meteorological data (taken from GLDAS dataset), and save it in csv file. The file contains one row, and each column related to different meteorological parameter.
-    
-The code need three parameters to run properly: 
-  - folder in which images are saved
-  - time of flight (format DD.MM.YY_HHMM)
-  - timezone
-
-  4.1 `create_meteorological_df_NoStation.R:` this script does the same as the above script ("withStation"), and used for cases where online data are accessed instead of mobile station. This optoin was not used in our study but we supply the code for users who do not have access to station data.
-
-##  Step 2 - Physical model (in julia)
 To run the physical model script, julia environment need to be installed.
 1. `physical_model.jl:` this script runs the physical model.
 2. To run the model on your own data, one change need to be done - "ARGS" variable.
