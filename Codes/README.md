@@ -1,41 +1,54 @@
 # Code for Microclimate Modeling and Bias-Correction
 
-This folder contains the code used in our study on microclimate modeling and machine learning-based bias correction. The code is organized into three main stages, each with its own set of scripts and instructions.
+This directory contains the code associated with the manuscript "From Big Data to Small Scales: Using Machine Learning to Correct Biases in Microclimate Predictions" by Itzkovitch et al. The repository is organized into subdirectories based on the different stages of the study, from data preparation to analysis and visualization.
 
-## Overview
+## Directory Structure
 
-The code integrates physical modeling and machine learning to improve the accuracy of ground temperature predictions. This folder includes:
-1. Scripts for setting up and running the physical microclimate model.
-2. A machine learning model to correct biases in the physical model's predictions.
-3. Scripts for data analysis and generating publication-quality figures.
+### 1. `Figures/`
+Scripts and resources for creating the figures in the manuscript and supplementary materials.
 
-## Repository Structure
+- Contains scripts in both Python and R for generating all figures, including main text and supplementary figures.
+- Example: Scripts for generating the results visualizations in Figure S3.
 
-- **`Physical framework`**: Code for setting up and running the physical model. 
+### 2. `Machine_Learning_model/`
+Code for training and testing the machine learning bias-correction model.
 
-- **`Statistical framework`**: Code for the machine learning bias-correction model. 
+- Includes the Random Forest implementation (`RF_model.py`) for predicting and correcting microclimate model biases.
 
-- **`Figures`**: Scripts for generating analysis and figures.
+### 3. `Meteorological_data_preparation/`
+Scripts for preparing meteorological input data required by the physical model.
 
-## Getting Started
+- Example: `download_GLDAS_data.R` for downloading and organizing GLDAS data.
 
-### Prerequisites
-To run the code, you need the following software environments:
+### 4. `Physical_framework/`
+Scripts related to the physical microclimate modeling framework.
 
-- **R**: Version 4.2.x or lower to ensure compatibility with the `rgdal` and raster packages. 
-- **Julia**: Required packages are automatically downloaded at the start of the script.
-- **Python**: Ensure that all necessary packages (listed in `requirements.txt` if available) are installed in your Python environment.
+- Includes the main Julia script for running the heat balance model with additional optimizations and a loop for automation.
 
-### Running the Code
+### 5. `Statistical_Analysis/`
+Code for statistical analyses presented in the manuscript.
 
-1. **Stage 1: Physical Framework**
-   - Navigate to the `Physical framework` folder.
-   - Run the R script for data preparation, then execute the Julia script to run the physical model.
+- Example: Linear regression models and Bayesian analysis tools to assess the machine learning model's impact on prediction accuracy.
+- Includes both R and Python scripts for the statistical models.
 
-2. **Stage 2: Statistical Framework**
-   - Navigate to the `Statistical framework` folder.
-   - Run the Python script to train the random forest model and correct the physical model’s biases.
+### 6. `maps_preparation/`
+Scripts for preparing input maps used in the microclimate and machine learning models.
 
-3. **Stage 3: Analysis and Figures**
-   - Navigate to the `Figures` folder.
-   - Run the relevant scripts in R and Python to reproduce all figures for the paper.
+- Includes processes for creating vegetation, height, solar radiation, shade, and skyview maps.
+- Example: `README.md` in this directory provides detailed instructions on generating and cropping the maps.
+
+## Usage Instructions
+
+1. **Prepare Input Maps**: Start with the `maps_preparation/` scripts to generate input maps from raw drone imagery.
+2. **Meteorological Data**: Use the scripts in `Meteorological_data_preparation/` to download and format meteorological data.
+3. **Run Physical Model**: Navigate to `Physical_framework/` and run the Julia scripts to execute the physical microclimate model.
+4. **Train Machine Learning Model**: Use the Python code in `Machine_Learning_model/` to train and test the bias-correction model.
+5. **Statistical Analysis**: Analyze the results and evaluate the models using the scripts in `Statistical_Analysis/`.
+6. **Create Figures**: Use the scripts in `Figures/` to reproduce the visualizations in the manuscript.
+
+## Requirements
+
+- Python 3.x
+- Julia 1.x
+- R version 4.x or higher
+- Required Python, Julia, and R packages are listed in their respective scripts. Install them as needed.
