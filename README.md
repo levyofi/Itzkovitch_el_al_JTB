@@ -1,4 +1,4 @@
-# Using machine learning to correct biases in microclimate predictions
+# From big data to small scales: Using machine learning to correct biases in microclimate predictions
 
 _Alon Itzkovitch, Idan Sulami, Ronny Doron Efroni, Moni Shahar, and
 Ofir Levy_
