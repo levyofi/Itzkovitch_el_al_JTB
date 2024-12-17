@@ -4,18 +4,6 @@ library(tidyr)
 library(readr)
 library(ggpubr)
 
-# "Zeelim_18.9.19_1300", "Zeelim_30.1.20_0810"
-"/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_23.9.19_0950" 
-#[14] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_23.9.19_1100" 
-# [18] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_23.9.19_1700" 
-# [19] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_23.9.19_1730" 
-# [34] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_0611"
-# [35] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_0707"
-# [36] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_0819"
-# [37] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_0924"
-# [38] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_1033"
-# [39] "/home/ofir/Dropbox/eclipse workspace/lab/Alon/cropped_maps//Zeelim_31.05.21_1140"
-
 # Define the train maps
 train_maps <- c("Zeelim_29.5.19_0830", "Zeelim_29.5.19_1650", "Zeelim_29.5.19_1730", 
                 "Zeelim_30.5.19_0600", "Zeelim_30.5.19_0630", "Zeelim_18.9.19_0900", 
