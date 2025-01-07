@@ -152,7 +152,7 @@ get_map_data(name) = fix_raster_NA(get_raster_data(name)) ;
 # ARGS = [input, output, soiltype (default = 0)]
 ARGS = ["../Example data/Input data", 
     "../Example data/Output data/", 
-    8] ;
+    0] ;
 
 args = map(x -> string(x), ARGS) ; 
 working_directory = String(args[1]) ;
