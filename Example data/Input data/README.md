@@ -13,7 +13,7 @@ These maps serve as input for the physical model in `Codes/Physical framework/ph
 
 **Observed Temperature Map for Validation:**
 
-- `IR.tif`: Temperature map recorded with an infrared camera, providing real ground temperature values for model validation. This map is used in `Codes/Statistical framework/RF_model.py` to calculate the bias before and after the ML correction. 
+- `IR.tif`: Temperature map recorded with an infrared camera, providing real ground temperature values for error calculations and model validation. This map is used in `Codes/Statistical framework/RF_model.py` to calculate the errors before and after the ML correction. 
 
 **RGB Orthophoto Map:**
 
