@@ -1,12 +1,25 @@
-### Here we can find
-Two scripts to run the following models:
-1. `RF_model.py:` The random forest model to predict prediction error of physical model.
-2. `DNN_Correction_Model_Class.py:` A class that can replace random-forest modeling class from the `RF_model.py` script, in order to examine the performances of simple neural-network. Further elaborate in Supplementary.
-## Pipeline (How to run the model)
-The following steps are required and processed:
-1. the user should indicate in which folder the data is saved.
-2. the model trained on 80% of the data. In our case, there is no leakage of information within days, meaning all flights from  the same day are in one set (train or test).
-3. the model predict results on the other 20%.
-4. data is saved, meaning one prediction map for each file.
+## Contents
 
-The base model (class) is random forest, which can be switched to DNN if wanted.
+This folder contains two main scripts for running and comparing predictive models:
+
+1. **`RF_model.py`**
+   Implements a random forest model to predict the errors of a physical model.
+2. **`DNN_Correction_Model_Class.py`**
+   Provides a neural network–based correction model that can be used in place of the random forest in `RF_model.py` to compare the performance of a simple DNN. More details are available in the Supplementary Information.
+
+---
+
+## Pipeline: How to Run the Models
+
+To use these models, follow these steps:
+
+1. **Specify the Data Folder:**
+   Indicate the directory where your data is stored.
+2. **Training and Testing Split:**
+   The model is trained on 80% of the data. To prevent information leakage, all samples from the same day (i.e., all flights from a single day) are assigned to either the training or testing set, never both.
+3. **Prediction:**
+   The trained model predicts results on the remaining 20% of the data.
+4. **Saving Results:**
+   The output predictions are saved, generating a prediction map for each input file.
+
+By default, the pipeline uses a random forest model, but you can easily switch to the DNN-based model if you wish to compare performance.
