@@ -31,7 +31,7 @@ p_me <- ggplot(df_long[df_long$Metric=="ME",], aes(x = Model, y = value, color =
         legend.position = "none",  # Remove legends from individual plots
         axis.title.x = element_blank(),  # Remove X-axis title
         plot.title = element_blank()) + # Remove panel titles
-  labs(y = "ME (℃)") + 
+  labs(y = "Mean Error (°C)") + 
   coord_cartesian(ylim = c(min(df_long$value[df_long$Metric == "ME"]), 
                            max(df_long$value[df_long$Metric == "ME"])))
 
@@ -49,7 +49,7 @@ p_mae <- ggplot(df_long[df_long$Metric=="MAE",], aes(x = Model, y = value, color
         legend.position = "none",  # Remove legends from individual plots
         axis.title.x = element_blank(),  # Remove X-axis title
         plot.title = element_blank()) + # Remove panel titles
-  labs(y = "MAE (℃)") + 
+  labs(y = "Mean Absolute Error (°C)") + 
   coord_cartesian(ylim = c(min(df_long$value[df_long$Metric == "MAE"]), 
                            max(df_long$value[df_long$Metric == "MAE"])))
 
@@ -60,9 +60,10 @@ legend <- get_legend(ggplot(df_long, aes(x = Model, y = value, color = Model)) +
                        theme(legend.position = "bottom"))
 
 # Arrange the plots with the shared legend and no panel titles or x-axis title
-jpeg(filename = "Figure S4.jpg", width=3000, height = 1400, res=300)
+jpeg(filename = "Figure S3.jpg", width=3000, height = 1400, res=300)
 ggarrange(p_me, p_mae, ncol = 2, common.legend = TRUE, legend = "bottom",labels = c("(a)", "(b)"),
           label.y = 0.95 ,label.x = 0.08, # Add panel labels
           align = "hv")   +                    # Place legend at the bottom
   theme(plot.margin = margin(0.1,0.5,1,0.1, "cm"))
 dev.off()
+
